@@ -1,0 +1,1566 @@
+﻿/* ============================================================
+    1. RESET & BASICS
+============================================================ */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+:root {
+    --gs-accent: #ffc107;
+    --gs-dark-bg: #1a1a1a;
+    --gs-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+    2. FIXED HEADER LOGIC
+============================================================ */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    transition: var(--gs-transition);
+    background-color: transparent;
+}
+
+    .site-header.scrolled {
+        background-color: rgba(26, 26, 26, 0.98);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+/* Topbar Styling */
+.topbar {
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    font-size: 13px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: var(--gs-transition);
+    width: 100%;
+}
+
+.site-header.scrolled .topbar {
+    margin-top: -50px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Navbar Styling */
+#mainNavbar {
+    background: transparent;
+    padding: 20px 0;
+    transition: var(--gs-transition);
+}
+
+.site-header.scrolled #mainNavbar {
+    padding: 12px 0;
+}
+
+/* Logo & Links */
+.brand-logo {
+    height: 48px;
+    width: auto;
+    transition: height 0.3s ease;
+}
+
+.brand-text {
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    font-size: 1.25rem;
+}
+
+#mainNavbar .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+}
+
+    #mainNavbar .nav-link:hover {
+        color: var(--gs-accent) !important;
+    }
+
+/* Contact Button */
+.gs-btn-contact {
+    font-weight: 700;
+    border-radius: 0;
+    background-color: var(--gs-accent);
+    border: 2px solid var(--gs-accent);
+    color: #000 !important;
+}
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+.dropdown-toggle::after {
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+/* ============================================================
+    3. HERO SLIDER & CENTERED CAPTION
+============================================================ */
+.hero-img {
+    height: 100vh;
+    object-fit: cover;
+}
+
+.gs-caption-centered {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    z-index: 5;
+}
+
+    .gs-caption-centered h1 {
+        font-size: clamp(1.8rem, 5vw, 3.5rem);
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+    }
+
+    .gs-caption-centered p {
+        font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+        margin-bottom: 25px;
+        letter-spacing: 1px;
+    }
+
+/* ============================================================
+    4. ANIMATION (SMOOTH FADE IN & OUT)
+============================================================ */
+.gs-animate {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+}
+
+.carousel-item.active .gs-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.carousel-item-next.carousel-item-start .gs-animate,
+.carousel-item-prev.carousel-item-end .gs-animate,
+.carousel-item.active.carousel-item-start .gs-animate,
+.carousel-item.active.carousel-item-end .gs-animate {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+.carousel-item.active .delay-1 {
+    transition-delay: 0.3s;
+}
+
+.carousel-item.active .delay-2 {
+    transition-delay: 0.6s;
+}
+
+/* ============================================================
+    5. ABOUT SECTION (Overlay Images Fix)
+============================================================ */
+
+/* ✅ الكود الصح حسب HTML بتاعك */
+.about-img-wrapper {
+    position: relative;
+    width: 100%;
+    display: block;
+    padding-bottom: 10%; /* مساحة تحت عشان الصورة الأمامية متتقصش */
+}
+
+/* الصورة الخلفية الكبيرة */
+.main-about-img {
+    width: 90%;
+    display: block;
+    position: relative;
+    z-index: 1;
+    border-radius: 4px;
+}
+
+/* الصورة الأمامية (Overlay) */
+.overlay-about-img {
+    width: 50%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
+    border: 10px solid #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border-radius: 4px;
+}
+
+/* ✅ fallback (لو في صفحات تانية بتستخدم الكلاسات القديمة) */
+.about-img-container {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-bottom: 10%;
+}
+
+.main-img {
+    width: 90% !important;
+    display: block;
+    position: relative;
+    z-index: 1;
+    border-radius: 4px;
+}
+
+.overlay-img {
+    width: 50% !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    z-index: 2 !important;
+    border: 10px solid #fff !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border-radius: 4px;
+}
+
+/* ============================================================
+    6. FOOTER
+============================================================ */
+.gs-footer {
+    background: var(--gs-dark-bg);
+    color: #888;
+    padding: 30px 0;
+    border-top: 1px solid #333;
+}
+
+/* =========================
+   FORCE ABOUT IMAGES OVERLAY
+========================= */
+
+.about-img-wrapper,
+.about-img-container {
+    position: relative !important;
+    width: 100% !important;
+    display: block !important;
+    padding-bottom: 10% !important;
+}
+
+    /* الخلفية (الصورة الكبيرة) */
+    .about-img-wrapper .main-about-img,
+    .about-img-container .main-img,
+    .about-img--back {
+        width: 90% !important;
+        display: block !important;
+        position: relative !important;
+        z-index: 1 !important;
+        border-radius: 4px !important;
+    }
+
+    /* الأمامية (الصورة الراكبة) */
+    .about-img-wrapper .overlay-about-img,
+    .about-img-container .overlay-img,
+    .about-img--front {
+        width: 50% !important;
+        position: absolute !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        z-index: 2 !important;
+        border: 10px solid #fff !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+        border-radius: 4px !important;
+    }
+/* =========================
+   FINAL TUNING (REF MATCH)
+========================= */
+
+.about-img-wrapper,
+.about-img-container {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 680px !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    padding-bottom: 90px !important;
+}
+
+    /* الخلفية: كبّرها */
+    .about-img-wrapper .main-about-img,
+    .about-img-container .main-img,
+    .about-img--back {
+        width: 92% !important;
+        height: 440px !important;
+        object-fit: cover !important;
+        display: block !important;
+        border-radius: 6px !important;
+        z-index: 1 !important;
+    }
+
+    /* الأمامية: صغّرها وطلّعها لفوق شوية */
+    .about-img-wrapper .overlay-about-img,
+    .about-img-container .overlay-img,
+    .about-img--front {
+        width: 62% !important;
+        height: 320px !important;
+        object-fit: cover !important;
+        position: absolute !important;
+        right: -10px !important; /* كانت طالعة زيادة */
+        bottom: 0px !important; /* كانت نازلة زيادة */
+        z-index: 2 !important;
+        border: 12px solid #fff !important;
+        box-shadow: 0 14px 40px rgba(0,0,0,0.25) !important;
+        border-radius: 6px !important;
+    }
+
+/* موبايل */
+@media (max-width: 991px) {
+    .about-img-wrapper,
+    .about-img-container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding-bottom: 40px !important;
+    }
+
+        .about-img-wrapper .main-about-img,
+        .about-img-container .main-img,
+        .about-img--back {
+            width: 100% !important;
+            height: 320px !important;
+        }
+
+        .about-img-wrapper .overlay-about-img,
+        .about-img-container .overlay-img,
+        .about-img--front {
+            width: 82% !important;
+            height: 260px !important;
+            right: 0 !important;
+            bottom: -25px !important;
+        }
+}
+
+/* ============================================================
+   CHAIRMAN SECTION – HEADER + BODY (MATCH REF #2) (FIX HEIGHT)
+============================================================ */
+
+.gs-chairman {
+    background: #f7f4ef;
+}
+
+/* ✅ خلي الصف يتمدد فعلاً ويخلي العمودين نفس الارتفاع */
+@media (min-width: 992px) {
+    .gs-chairman .row.g-0.align-items-stretch {
+        display: flex !important;
+        align-items: stretch !important;
+    }
+
+    .gs-chairman .col-lg-6 {
+        display: flex !important; /* ✅ مهم */
+        flex-direction: column;
+    }
+}
+
+/* LEFT: full background image */
+.gs-chairman__media {
+    width: 100%;
+    height: 100%; /* ✅ أهم سطر: يخليها نفس طول العمود */
+    min-height: 100%; /* ✅ */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* RIGHT: wrapper (header فوق + body تحت) */
+.gs-chairman__right {
+    height: 100%; /* ✅ يخلي اليمين يحدد الطول */
+    padding: 80px 60px;
+    background: #f7f4ef;
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* مسافة بين الهيدر والبودي */
+}
+
+/* =========================
+   HEADER (زي الصورة 2)
+========================= */
+
+.gs-chairman__header {
+    max-width: 820px;
+}
+
+.gs-chairman__kicker {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.gs-chairman__line {
+    width: 42px;
+    height: 2px;
+    background: var(--gs-accent);
+    display: inline-block;
+}
+
+.gs-chairman__label {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #b08a3a;
+    font-weight: 700;
+}
+
+.gs-chairman__title {
+    font-weight: 900;
+    line-height: 1.05;
+    font-size: clamp(2.2rem, 3.8vw, 3.6rem);
+    margin: 0 0 18px 0;
+    color: #1d1d1d;
+}
+
+.gs-chairman__intro {
+    color: #6b6b6b;
+    font-size: 18px;
+    line-height: 1.9;
+    margin: 0;
+    max-width: 760px;
+}
+
+/* =========================
+   BODY (Profile + Text)
+========================= */
+
+.gs-chairman__body {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+/* profile column */
+.gs-chairman__profileCol {
+    text-align: left;
+    padding-top: 10px;
+}
+
+/* avatar */
+.gs-chairman__avatarLg {
+    width: 135px;
+    height: 135px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 14px;
+    background: #000;
+}
+
+    .gs-chairman__avatarLg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+/* name */
+.gs-chairman__nameLg {
+    margin: 0;
+    font-weight: 800;
+    font-size: 21px;
+    color: #1d1d1d;
+}
+
+/* role */
+.gs-chairman__roleLg {
+    margin-top: 6px;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #b08a3a;
+}
+
+/* text column */
+.gs-chairman__textCol {
+    border-left: 1px solid rgba(0,0,0,0.08);
+    padding-left: 24px;
+}
+
+    .gs-chairman__textCol p {
+        margin: 0 0 24px 0;
+        max-width: 100%;
+        color: #6b6b6b;
+        font-size: 17px;
+        line-height: 1.75;
+    }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 991px) {
+    .gs-chairman__media {
+        min-height: 420px; /* على الموبايل لازم height ثابت عشان تبان */
+        height: 420px;
+    }
+
+    .gs-chairman__right {
+        height: auto;
+        padding: 40px 22px;
+        gap: 28px;
+    }
+
+    .gs-chairman__body {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .gs-chairman__profileCol {
+        padding-top: 0;
+        text-align: center;
+    }
+
+    .gs-chairman__textCol {
+        border-left: none;
+        padding-left: 0;
+    }
+}
+
+
+/* ============================================================
+   STONE GALLERY SECTION (NEW) 
+============================================================ */
+.products-section {
+    background: #e7e1d6; /* لون مختلف وشيك */
+    padding: 80px 0;
+}
+
+.products-title {
+    text-align: center;
+    font-size: 42px;
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 24px;
+}
+
+.product-card {
+    text-decoration: none;
+    color: #111;
+}
+
+    .product-card img {
+        width: 100%;
+        height: 320px;
+        object-fit: cover;
+        display: block;
+    }
+
+.product-card {
+    position: relative;
+}
+
+.product-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: .3s;
+}
+
+.product-card:hover .product-overlay {
+    opacity: 1;
+}
+
+.product-card h5 {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+/* التحكم في الظهور */
+.product-card.hidden {
+    display: none;
+}
+
+.products-actions {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.products-btn {
+    padding: 10px 28px;
+    background: #fff;
+    border: 1px solid #111;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+
+    .products-btn:hover {
+        background: #111;
+        color: #fff;
+    }
+
+.d-none {
+    display: none;
+}
+
+/* ريسبونسيف بسيط */
+@media(max-width:991px) {
+    .products-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+
+
+/* ============================================================
+   WHY CHOOSE SECTION
+============================================================ */
+:root {
+    /* لون مميز (أوف وايت دافي) */
+    --gs-why-bg: #fbf7f0;
+    --gs-why-text: #4e4e4e;
+    --gs-why-title: #1c1c1c;
+    --gs-why-line: rgba(0,0,0,.12);
+}
+
+.gs-why {
+    background: var(--gs-why-bg);
+    padding: 90px 0;
+}
+
+.gs-why__wrap {
+    max-width: 1180px;
+}
+
+.gs-why__grid {
+    display: grid;
+    grid-template-columns: 1.05fr .95fr; /* نص أكبر شوية زي الريفرنس */
+    gap: 44px;
+    align-items: start;
+}
+
+/* ---------- Left content ---------- */
+.gs-why__kicker {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.gs-why__line {
+    width: 44px;
+    height: 2px;
+    background: var(--gs-accent);
+    display: inline-block;
+}
+
+.gs-why__label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #b08a3a;
+    font-weight: 800;
+}
+
+.gs-why__title {
+    margin: 0 0 22px 0;
+    font-weight: 900;
+    color: var(--gs-why-title);
+    font-size: clamp(2rem, 3vw, 2.8rem);
+}
+
+.gs-why__text p {
+    margin: 0 0 16px 0;
+    color: var(--gs-why-text);
+    font-size: 16.5px;
+    line-height: 1.95;
+}
+
+.gs-why__divider {
+    margin-top: 24px;
+    height: 1px;
+    background: var(--gs-why-line);
+    width: min(640px, 100%);
+}
+
+/* ---------- Right image ---------- */
+.gs-why__media {
+    position: relative;
+}
+
+    .gs-why__media img {
+        width: 100%;
+        height: 520px;
+        object-fit: cover;
+        display: block;
+        border-radius: 6px;
+        box-shadow: 0 18px 45px rgba(0,0,0,.18);
+    }
+
+/* ============================================================
+   Responsive
+============================================================ */
+@media (max-width: 991px) {
+    .gs-why {
+        padding: 65px 0;
+    }
+
+    .gs-why__grid {
+        grid-template-columns: 1fr;
+        gap: 26px;
+    }
+
+    .gs-why__media img {
+        height: 420px;
+    }
+
+    .gs-why__divider {
+        width: 100%;
+    }
+}
+
+@media (max-width: 575px) {
+    .gs-why__media img {
+        height: 320px;
+    }
+}
+
+/* ============================================================
+   CONTACT CARD SECTION (Drop Us A Message)
+============================================================ */
+:root {
+    --gs-contact-bg: url("/images/contact/contact-bg.jpg");
+    --gs-contact-overlay: rgba(18, 23, 28, .55);
+    --gs-field-bg: #f4f1ee;
+    --gs-field-border: rgba(0,0,0,.06);
+}
+
+.gs-contact {
+    position: relative;
+    padding: 95px 0;
+    background-image: var(--gs-contact-bg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+    /* overlay to make marble darker */
+    .gs-contact::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--gs-contact-overlay);
+        pointer-events: none;
+    }
+
+    .gs-contact .container {
+        position: relative;
+        z-index: 1;
+    }
+
+/* wrapper: put card slightly to the right like screenshot */
+.gs-contact__wrap {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* white card */
+.gs-contact__card {
+    width: min(720px, 100%);
+    background: #fff;
+    border-radius: 4px;
+    padding: 70px 70px 60px;
+    box-shadow: 0 22px 55px rgba(0,0,0,.28);
+}
+
+/* kicker */
+.gs-contact__kicker {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.gs-contact__line {
+    width: 44px;
+    height: 2px;
+    background: var(--gs-accent);
+    display: inline-block;
+}
+
+.gs-contact__label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #b08a3a;
+    font-weight: 800;
+}
+
+/* title + subtitle */
+.gs-contact__title {
+    margin: 0 0 12px 0;
+    font-weight: 900;
+    color: #1d1d1d;
+    font-size: clamp(2.2rem, 3.2vw, 3.2rem);
+}
+
+.gs-contact__subtitle {
+    margin: 0 0 34px 0;
+    color: #6b6b6b;
+    font-size: 16px;
+}
+
+/* form */
+.gs-contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.gs-contact__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.gs-contact__input,
+.gs-contact__select,
+.gs-contact__textarea {
+    width: 100%;
+    background: var(--gs-field-bg);
+    border: 1px solid var(--gs-field-border);
+    padding: 16px 18px;
+    font-size: 15px;
+    outline: none;
+}
+
+.gs-contact__textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+/* button */
+.gs-contact__btn {
+    align-self: flex-start;
+    background: #e1ad56; /* قريب من الصورة */
+    border: none;
+    color: #fff;
+    font-weight: 900;
+    letter-spacing: 1px;
+    padding: 16px 28px;
+    cursor: pointer;
+    transition: transform .2s ease, filter .2s ease;
+}
+
+    .gs-contact__btn:hover {
+        transform: translateY(-2px);
+        filter: brightness(0.95);
+    }
+
+/* responsive */
+@media (max-width: 991px) {
+    .gs-contact {
+        padding: 70px 0;
+    }
+
+    .gs-contact__wrap {
+        justify-content: center;
+    }
+
+    .gs-contact__card {
+        padding: 45px 26px 40px;
+    }
+
+    .gs-contact__row {
+        grid-template-columns: 1fr;
+    }
+
+    .gs-contact__btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ============================================================
+   SHOWROOM FOOTER SECTION
+============================================================ */
+
+.gs-footerShowroom {
+    position: relative;
+    padding: 70px 0 26px;
+    color: #e9eef6;
+    /* الخلفية: رخامة + طبقة تغميق */
+    background: linear-gradient(rgba(12,18,22,.86), rgba(12,18,22,.86)), url("/Images/footer/footer-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+
+/* ===== 3 columns ===== */
+.gs-footerShowroom__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr 1fr; /* خلي الشمال واليمين متساويين */
+    gap: 34px;
+    align-items: start;
+}
+
+/* خلي العمودين النصوص شكلهم واحد */
+.gs-footerShowroom__left,
+.gs-footerShowroom__right {
+    padding-top: 6px; /* نفس بداية السطر */
+}
+
+/* Title */
+.gs-footerShowroom__title {
+    margin: 0 0 14px 0;
+    font-weight: 900;
+    color: #fff;
+    font-size: 26px;
+    letter-spacing: .2px;
+}
+
+/* نصوص الشمال واليمين */
+.gs-footerShowroom__factories p,
+.gs-footerShowroom__info p,
+.gs-footerShowroom__right p {
+    margin: 0 0 12px 0;
+    line-height: 1.85;
+    color: rgba(255,255,255,.9);
+}
+
+/* ===== Map ===== */
+.gs-footerShowroom__mapFrame {
+    width: 100%;
+    height: 290px; /* أطول شوية عشان يملى النص */
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 18px 45px rgba(0,0,0,.35);
+    border: 1px solid rgba(255,255,255,.10);
+}
+
+    /* اختياري: يخلي الخريطة تمتد بعرضها */
+    .gs-footerShowroom__mapFrame iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+/* ===== Bottom ===== */
+.gs-footerShowroom__bottom {
+    margin-top: 34px;
+}
+
+.gs-footerShowroom__divider {
+    height: 1px;
+    background: rgba(255,255,255,.12);
+    margin-bottom: 16px;
+}
+
+.gs-footerShowroom__copy {
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255,255,255,.85);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 991px) {
+    .gs-footerShowroom {
+        padding: 55px 0 22px;
+    }
+
+    .gs-footerShowroom__top {
+        margin-bottom: 22px;
+    }
+
+    .gs-footerShowroom__grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .gs-footerShowroom__mapFrame {
+        height: 260px;
+    }
+
+    .gs-footerShowroom__title {
+        font-size: 24px;
+    }
+
+    .gs-footerShowroom__left,
+    .gs-footerShowroom__right {
+        padding-top: 0;
+    }
+}
+
+/* ============================================================
+   StartAboutUs Page
+============================================================ */
+
+/* ============================================================
+   PAGE HERO (About) - Improved Quality + Taller
+============================================================ */
+
+.gs-pageHero {
+    position: relative;
+    min-height: 115vh; /* ✅ أطول شوية */
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    color: #fff;
+    padding-top: 100px; /* للهيدر الثابت */
+}
+
+/* Slides wrapper */
+.gs-pageHero__slides {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+/* Each slide */
+.gs-pageHero__slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    /* ✅ شيلنا التكبير */
+    transform: scale(1);
+    opacity: 0;
+    animation: gsHeroSlide 24s infinite ease-in-out;
+}
+
+    /* الصور */
+    .gs-pageHero__slide.is-1 {
+        background-image: url("/Images/about/hero-1.jpg");
+        animation-delay: 0s;
+    }
+
+    .gs-pageHero__slide.is-2 {
+        background-image: url("/Images/about/hero-2.jpg");
+        animation-delay: 8s;
+    }
+
+    .gs-pageHero__slide.is-3 {
+        background-image: url("/Images/about/hero-3.jpg");
+        animation-delay: 16s;
+    }
+
+/* Overlay أخف */
+.gs-pageHero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient( rgba(10,12,14,.45), rgba(10,12,14,.55) );
+}
+
+/* Content */
+.gs-pageHero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.gs-pageHero__inner {
+    text-align: center;
+    padding: 110px 0 130px;
+}
+
+/* Titles */
+.gs-pageHero__title {
+    margin: 0 0 20px 0;
+    font-weight: 900;
+    line-height: 1.1;
+    font-size: clamp(2.4rem, 4.5vw, 4.2rem);
+    opacity: 0;
+    animation: gsHeroText 24s infinite ease-in-out;
+}
+
+    .gs-pageHero__title.t-1 {
+        animation-delay: 0s;
+    }
+
+    .gs-pageHero__title.t-2 {
+        animation-delay: 8s;
+    }
+
+    .gs-pageHero__title.t-3 {
+        animation-delay: 16s;
+    }
+
+/* Breadcrumb */
+.gs-pageHero__crumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    color: #1d1d1d;
+    padding: 14px 22px;
+    border-radius: 8px;
+    box-shadow: 0 14px 30px rgba(0,0,0,.25);
+}
+
+.gs-pageHero__crumbCurrent {
+    color: var(--gs-accent);
+    font-weight: 800;
+}
+
+/* Animations */
+@keyframes gsHeroSlide {
+    0% {
+        opacity: 0;
+    }
+
+    8% {
+        opacity: 1;
+    }
+
+    33% {
+        opacity: 1;
+    }
+
+    42% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes gsHeroText {
+    0% {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    10% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    33% {
+        opacity: 1;
+    }
+
+    42% {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .gs-pageHero {
+        min-height: 95vh;
+        padding-top: 90px;
+    }
+
+    .gs-pageHero__inner {
+        padding: 90px 0 110px;
+    }
+}
+
+@media (max-width: 575px) {
+    .gs-pageHero {
+        min-height: 85vh;
+    }
+}
+
+
+/* ============================================================
+   ABOUT SPLIT SECTION (Like ref)
+============================================================ */
+
+:root {
+    --gs-accent: #d6a854; /* لو عندك متغير أساسي سيبه زي ما هو */
+}
+
+/* Section */
+.gs-aboutSplit {
+    padding: 90px 0;
+    background: #fbfaf7; /* خلفية مختلفة وهادية */
+}
+
+/* Grid */
+.gs-aboutSplit__grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 46px;
+    align-items: start;
+}
+
+/* Kicker */
+.gs-aboutSplit__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.gs-aboutSplit__line {
+    width: 44px;
+    height: 2px;
+    background: var(--gs-accent);
+    display: inline-block;
+}
+
+.gs-aboutSplit__label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gs-accent);
+    font-weight: 800;
+}
+
+/* Title */
+.gs-aboutSplit__title {
+    margin: 0 0 16px 0;
+    font-weight: 900;
+    line-height: 1.05;
+    color: #1d1d1d;
+    font-size: clamp(2.1rem, 3.2vw, 3.1rem);
+}
+
+/* Paragraphs */
+.gs-aboutSplit__desc {
+    margin: 0 0 14px 0;
+    color: #6b6b6b;
+    font-size: 16.5px;
+    line-height: 1.95;
+    max-width: 720px;
+}
+
+/* Features (2 columns) */
+.gs-aboutSplit__features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 22px;
+    margin-top: 26px;
+}
+
+.gs-aboutSplit__feature {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.gs-aboutSplit__icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: rgba(214,168,84,.12);
+    color: var(--gs-accent);
+    flex: 0 0 46px;
+}
+
+    .gs-aboutSplit__icon i {
+        font-size: 22px;
+        line-height: 1;
+    }
+
+.gs-aboutSplit__featureText h4 {
+    margin: 0;
+    font-weight: 900;
+    color: #1d1d1d;
+    line-height: 1.25;
+    font-size: 18px;
+}
+
+/* Bullets */
+.gs-aboutSplit__bullets {
+    margin-top: 18px;
+}
+
+    .gs-aboutSplit__bullets p {
+        margin: 0 0 10px 0;
+        color: #1d1d1d;
+        font-weight: 700;
+        font-size: 14px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+.gs-aboutSplit__arrow {
+    color: var(--gs-accent);
+    font-weight: 900;
+}
+
+/* Right side image */
+.gs-aboutSplit__photoWrap {
+    position: relative;
+    border-radius: 12px;
+    overflow: visible;
+}
+
+.gs-aboutSplit__photo {
+    width: 100%;
+    height: 520px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    box-shadow: 0 22px 55px rgba(0,0,0,.18);
+}
+
+/* Badge (overlay) */
+.gs-aboutSplit__badge {
+    position: absolute;
+    left: -50px; /* كانت -70px */
+    bottom: 70px; /* نرفعها شوية */
+    background: var(--gs-accent);
+    color: #fff;
+    padding: 18px 20px; /* كانت 26px 28px */
+    width: min(260px, 80%); /* كانت 320px */
+    box-shadow: 0 14px 32px rgba(0,0,0,.22);
+}
+
+
+.gs-aboutSplit__badgeText {
+    font-weight: 800;
+    line-height: 1.4;
+    font-size: 14.5px; /* كانت 16px */
+}
+
+
+/* ============================================================
+   Responsive
+============================================================ */
+@media (max-width: 991px) {
+    .gs-aboutSplit {
+        padding: 70px 0;
+    }
+
+    .gs-aboutSplit__grid {
+        grid-template-columns: 1fr;
+        gap: 26px;
+    }
+
+    .gs-aboutSplit__photo {
+        height: 420px;
+    }
+
+    .gs-aboutSplit__badge {
+        left: 14px;
+        bottom: 14px;
+        width: calc(100% - 28px);
+        border-radius: 10px;
+    }
+
+    .gs-aboutSplit__features {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 575px) {
+    .gs-aboutSplit__photo {
+        height: 360px;
+    }
+
+    .gs-aboutSplit__title {
+        font-size: 2rem;
+    }
+}
+
+
+/* ===============================
+   About - Vision Section
+================================ */
+
+.gs-vision {
+    position: relative;
+    padding: 120px 0;
+    background: #f7f4ef;
+}
+
+/* grid */
+.gs-vision__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 70px;
+    align-items: center;
+}
+
+/* ---------------- LEFT ---------------- */
+
+.gs-vision__left {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.gs-vision__imgWrap {
+    position: relative;
+    width: 360px;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.gs-vision__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 2px;
+}
+
+/* overlay card فوق الصورة */
+.gs-vision__overlay {
+    position: absolute;
+    left: 50%;
+    bottom: -60px;
+    transform: translateX(-50%) translateY(15px);
+    width: 320px;
+    background: rgba(40,40,40,.92);
+    color: #fff;
+    padding: 22px 22px;
+    font-size: 14px;
+    line-height: 1.7;
+    opacity: 0;
+    visibility: hidden;
+    transition: .35s ease;
+}
+
+/* يظهر عند الهوفر */
+.gs-vision__imgWrap:hover .gs-vision__overlay {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* علامة فوق الصورة */
+.gs-vision__imgWrap::after {
+    content: "View story";
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(0,0,0,.65);
+    color: #fff;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    letter-spacing: .5px;
+    transition: .3s ease;
+    pointer-events: none;
+}
+
+/* نخفي العلامة وقت ظهور الكلام */
+.gs-vision__imgWrap:hover::after {
+    opacity: 0;
+}
+
+/* الصندوق الرمادي اللي ورا (اللي انت معلم عليه) */
+.gs-vision__shadowBox {
+    position: absolute;
+    left: 50px;
+    bottom: -120px;
+    width: 340px;
+    height: 260px;
+    background: #5b5b5b;
+    z-index: 1;
+}
+
+/* ---------------- RIGHT ---------------- */
+
+.gs-vision__kicker {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #c89b4a;
+    font-weight: 600;
+    margin-bottom: 14px;
+}
+
+.gs-vision__title {
+    font-size: 40px;
+    font-weight: 700;
+    color: #1f2a37;
+    line-height: 1.25;
+    margin-bottom: 18px;
+}
+
+.gs-vision__desc {
+    font-size: 15px;
+    color: #6b7280;
+    line-height: 1.8;
+    margin-bottom: 28px;
+}
+
+/* list */
+
+.gs-vision__list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.gs-vision__item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2a37;
+}
+
+.gs-vision__num {
+    font-size: 18px;
+    font-weight: 700;
+    color: #c89b4a;
+    min-width: 32px;
+}
+
+.gs-vision__shadowBox {
+    display: none;
+}
+
+
+
+/* ---------------- Responsive ---------------- */
+
+@media (max-width: 991px) {
+
+    .gs-vision {
+        padding: 80px 0;
+    }
+
+    .gs-vision__grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+    }
+
+    .gs-vision__left {
+        justify-content: center;
+    }
+
+    .gs-vision__shadowBox {
+        left: 30px;
+    }
+
+    .gs-vision__overlay {
+        bottom: -40px;
+    }
+}
+
+

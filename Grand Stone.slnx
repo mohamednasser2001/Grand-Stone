@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="DataAccess/DataAccess.csproj" />
+  <Project Path="Domain/Domain.csproj" />
+  <Project Path="Grand Stone/Grand Stone.csproj" />
+  <Project Path="Infrastructure/Infrastructure.csproj" />
+</Solution>
