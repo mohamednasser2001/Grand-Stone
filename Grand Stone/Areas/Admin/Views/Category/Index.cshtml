@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Domain.Entities.Category>
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Categories";
+}
+
+<div class="admin-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="m-0">Categories</h5>
+
+        <a asp-area="Admin" asp-controller="Category" asp-action="Create" class="admin-btn-gold">
+            + Add New Category
+        </a>
+    </div>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th style="width:90px;">ID</th>
+                <th>Name</th>
+                <th style="width:180px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="3" class="text-muted">No categories yet.</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var c in Model)
+                {
+                    <tr>
+                        <td>@c.Id</td>
+                        <td>@c.Name</td>
+                        <td>
+                            <a asp-area="Admin"
+                               asp-controller="Category"
+                               asp-action="Edit"
+                               asp-route-id="@c.Id"
+                               class="btn btn-sm btn-outline-light">
+                                Edit
+                            </a>
+
+                            <form asp-area="Admin"
+                                  asp-controller="Category"
+                                  asp-action="DeleteConfirmed"
+                                  method="post"
+                                  style="display:inline;" class="js-delete-form">
+                                 
+
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@c.Id" />
+
+                                <button type="submit" class="btn btn-sm btn-outline-danger ms-1">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

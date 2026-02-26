@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<Domain.Entities.Product>
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -110,6 +111,8 @@
 </section>
 
 <partial name="_ChairmanSection" />
+
+@* PRODUCTS SECTION (DB) *@
 <section class="products-section">
 
     <div class="container">
@@ -118,107 +121,30 @@
 
         <div class="products-grid" id="productsGrid">
 
-            <!-- item 1 -->
-            <a asp-area="Customer"
-               asp-controller="Product"
-               asp-action="Details"
-               asp-route-id="1"
-               class="product-card">
+            @{
+                var productsList = Model?.ToList() ?? new List<Domain.Entities.Product>();
+            }
 
-                <img src="/images/products/p1.jpg" alt="">
-                <div class="product-overlay">SEE PRODUCT</div>
-                <h5>Negro Zimbabwe</h5>
+            @for (int i = 0; i < productsList.Count; i++)
+            {
+                var item = productsList[i];
+                var isHidden = i >= 4; // أول 4 ظاهرين والباقي مخفي
 
-            </a>
+                <a asp-area="Customer"
+                   asp-controller="Product"
+                   asp-action="Details"
+                   asp-route-id="@item.Id"
+                   class="product-card @(isHidden ? "hidden" : "")"
+                   style="@(isHidden ? "display:none;" : "")">
 
-            <!-- item 2 -->
-            <a asp-area="Customer"
-               asp-controller="Product"
-               asp-action="Details"
-               asp-route-id="2"
-               class="product-card">
+                    <img src="@(string.IsNullOrWhiteSpace(item.ImageUrl) ? "/images/products/p1.jpg" : item.ImageUrl)"
+                         alt="@item.Name">
 
-                <img src="/images/products/p2.jpg" alt="">
-                <div class="product-overlay">SEE PRODUCT</div>
-                <h5>Negro Zimbabwe</h5>
+                    <div class="product-overlay">SEE PRODUCT</div>
+                    <h5>@item.Name</h5>
 
-            </a>
-
-            <!-- item 3 -->
-            <a asp-area="Customer"
-               asp-controller="Product"
-               asp-action="Details"
-               asp-route-id="3"
-               class="product-card">
-
-                <img src="/images/products/p3.jpg" alt="">
-                <div class="product-overlay">SEE PRODUCT</div>
-                <h5>Negro Zimbabwe</h5>
-
-            </a>
-
-            <!-- item 4 -->
-            <a asp-area="Customer"
-               asp-controller="Product"
-               asp-action="Details"
-               asp-route-id="4"
-               class="product-card">
-
-                <img src="/images/products/p4.jpg" alt="">
-                <div class="product-overlay">SEE PRODUCT</div>
-                <h5>Negro Zimbabwe</h5>
-
-            </a>
-
-            <!-- hidden by default -->
-
-            <a asp-area="Customer"
-               asp-controller="Product"
-               asp-action="Details"
-               asp-route-id="5"
-               class="product-card hidden">
-
-                <img src="/images/products/p5.jpg" alt="">
-                <div class="product-overlay">SEE PRODUCT</div>
-                <h5>Negro Zimbabwe</h5>
-
-            </a>
-
-            <a asp-area="Customer"
-               asp-controller="Product"
-               asp-action="Details"
-               asp-route-id="6"
-               class="product-card hidden">
-
-                <img src="/images/products/p6.jpg" alt="">
-                <div class="product-overlay">SEE PRODUCT</div>
-                <h5>Negro Zimbabwe</h5>
-
-            </a>
-
-            <a asp-area="Customer"
-               asp-controller="Product"
-               asp-action="Details"
-               asp-route-id="7"
-               class="product-card hidden">
-
-                <img src="/images/products/p7.jpg" alt="">
-                <div class="product-overlay">SEE PRODUCT</div>
-                <h5>Negro Zimbabwe</h5>
-
-            </a>
-
-            <a asp-area="Customer"
-               asp-controller="Product"
-               asp-action="Details"
-               asp-route-id="8"
-               class="product-card hidden">
-
-                <img src="/images/products/p8.jpg" alt="">
-                <div class="product-overlay">SEE PRODUCT</div>
-                <h5>Negro Zimbabwe</h5>
-
-            </a>
+                </a>
+            }
 
         </div>
 
@@ -230,30 +156,52 @@
     </div>
 
 </section>
+
 <script>
     const seeMoreBtn = document.getElementById("seeMoreBtn");
     const seeLessBtn = document.getElementById("seeLessBtn");
 
-    const hiddenItems = document.querySelectorAll(".product-card.hidden");
+    function getHiddenItems() {
+        return document.querySelectorAll(".product-card.hidden");
+    }
+
+    function toggleButtons(showLess) {
+        if (showLess) {
+            seeMoreBtn.classList.add("d-none");
+            seeLessBtn.classList.remove("d-none");
+        } else {
+            seeLessBtn.classList.add("d-none");
+            seeMoreBtn.classList.remove("d-none");
+        }
+    }
+
+    // لو المنتجات أقل من أو يساوي 4 نخفي الأزرار
+    (function initProductsButtons() {
+        const hiddenItems = getHiddenItems();
+        if (hiddenItems.length === 0) {
+            seeMoreBtn.classList.add("d-none");
+            seeLessBtn.classList.add("d-none");
+        }
+    })();
 
     seeMoreBtn.addEventListener("click", function () {
+        const hiddenItems = getHiddenItems();
 
         hiddenItems.forEach(x => {
             x.style.display = "block";
         });
 
-        seeMoreBtn.classList.add("d-none");
-        seeLessBtn.classList.remove("d-none");
+        toggleButtons(true);
     });
 
     seeLessBtn.addEventListener("click", function () {
+        const hiddenItems = getHiddenItems();
 
         hiddenItems.forEach(x => {
             x.style.display = "none";
         });
 
-        seeLessBtn.classList.add("d-none");
-        seeMoreBtn.classList.remove("d-none");
+        toggleButtons(false);
 
         window.scrollTo({
             top: document.querySelector('.products-section').offsetTop - 80,
@@ -261,7 +209,6 @@
         });
     });
 </script>
-
 
 
 

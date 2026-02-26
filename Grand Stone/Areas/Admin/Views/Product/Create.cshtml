@@ -1,0 +1,74 @@
+﻿@model Domain.Entities.Product
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Add Product";
+    var categories = ViewBag.Categories as List<SelectListItem> ?? new List<SelectListItem>();
+}
+
+<div class="admin-card" style="max-width:900px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="m-0">Add New Product</h5>
+        <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-outline-light">Back</a>
+    </div>
+
+    <form asp-area="Admin" asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Price (EGP)</label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Category</label>
+
+                <select name="categoryId" class="form-select" asp-items="categories">
+                    <option value="0">-- Select Category --</option>
+                </select>
+
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Available</label>
+                <select asp-for="IsAvailable" class="form-select">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Product Image</label>
+                <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                @Html.ValidationMessage("ImageUrl", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="admin-btn-gold">Save</button>
+            <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-outline-light">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

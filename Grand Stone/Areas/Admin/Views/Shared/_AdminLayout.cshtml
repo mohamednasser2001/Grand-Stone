@@ -1,0 +1,140 @@
+﻿@{
+    Layout = null;
+    var title = ViewData["Title"] ?? "Admin Dashboard";
+
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@title - Grand Stone Admin</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+</head>
+<body class="admin-body">
+
+    <div class="admin-wrapper">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="brand">
+                <div class="brand-mark"></div>
+                <div>
+                    <div class="brand-name">GRAND STONE</div>
+                    <div class="brand-sub">ADMIN PANEL</div>
+                </div>
+            </div>
+
+            <nav class="admin-nav">
+                <a class="nav-link-item @(currentController == "Home" ? "active" : "")"
+                   asp-area="Admin" asp-controller="Home" asp-action="Index">
+                    Dashboard
+                </a>
+
+                <a class="nav-link-item @(currentController == "Product" ? "active" : "")"
+                   asp-area="Admin" asp-controller="Product" asp-action="Index">
+                    Products
+                </a>
+
+                <a class="nav-link-item @(currentController == "Category" ? "active" : "")"
+                   asp-area="Admin" asp-controller="Category" asp-action="Index">
+                    Categories
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <small>© @DateTime.Now.Year Grand Stone</small>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="admin-main">
+            <!-- Topbar -->
+            <div class="admin-topbar">
+                <div class="topbar-left">
+                    <h4 class="m-0">@title</h4>
+                    <small class="text-muted">Manage products & categories</small>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search..." />
+                    </div>
+                    <div class="admin-user">
+                        <div class="user-avatar">A</div>
+                        <div class="user-name">Admin</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="admin-content">
+                @RenderBody()
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if (TempData["ToastMessage"] != null)
+    {
+        <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            iconColor: '#c7a35a',
+            background: '#171a21',
+            color: 'rgba(255,255,255,.92)',
+            showConfirmButton: false,
+            timer: 2200,
+            timerProgressBar: true,
+            padding: '12px 14px',
+            customClass: {
+                popup: 'gs-toast'
+            }
+        });
+
+        Toast.fire({
+            icon: '@(TempData["ToastType"] ?? "success")',
+            title: '@TempData["ToastMessage"]'
+        });
+        </script>
+    }
+    <script>
+        document.addEventListener("submit", function (e) {
+            const form = e.target;
+            if (!form.classList.contains("js-delete-form")) return;
+
+            e.preventDefault();
+
+            const name = form.getAttribute("data-name") || "this item";
+
+            Swal.fire({
+                title: 'Delete?',
+                text: `Are you sure you want to delete ${name}?`,
+                icon: 'warning',
+                background: '#171a21',
+                color: 'rgba(255,255,255,.92)',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
+                confirmButtonColor: '#c7a35a',
+                cancelButtonColor: '#2b2f3a'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

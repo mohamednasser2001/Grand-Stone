@@ -1,46 +1,52 @@
 ﻿@model Domain.Entities.Product
 
 @{
-    ViewData["Title"] = "Product Details";
+    ViewData["Title"] = Model?.Name ?? "Product Details";
 }
 
-<div class="container mt-5">
+<section class="product-details">
+    <div class="container product-details-container">
 
-    <div class="row">
+        <!-- LEFT: Image -->
+        <div class="product-image">
+            <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="back-link">
+                &#8592; Back
+            </a>
 
-        <!-- Image -->
-        <div class="col-md-6">
-            <img src="@Model.ImageUrl"
-                 class="img-fluid rounded"
-                 alt="@Model.Name" />
+            <img src="@(Model?.ImageUrl ?? "/images/products/p1.jpg")"
+                 alt="@(Model?.Name ?? "Product")" />
         </div>
 
-        <!-- Info -->
-        <div class="col-md-6">
+        <!-- RIGHT: Info -->
+        <div class="product-info">
 
-            <h2 class="mb-3">@Model.Name</h2>
+            <h1 class="product-title">@Model?.Name</h1>
 
-            <h4 class="text-success mb-3">
-                @Model.Price.ToString("0.00") EGP
-            </h4>
-
-            <p class="mb-4">
-                @Model.Description
+            <p class="product-desc">
+                @Model?.Description
             </p>
 
-            <div class="d-flex gap-2">
+            <div class="product-meta">
+                <div class="meta-row">
+                    <span class="meta-label">Finish</span>
+                    <span class="meta-value">Polished</span>
+                </div>
 
-                <a asp-controller="Product"
-                   asp-action="Index"
-                   class="btn btn-outline-secondary">
-                    Back
+                <div class="meta-row">
+                    <span class="meta-label">Applications</span>
+                    <span class="meta-value">Kitchen countertops, Bathroom countertops, Interior pavements</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="btn-back">
+                    Back to Home
                 </a>
-
             </div>
 
         </div>
 
     </div>
+</section>
 
-</div>
 

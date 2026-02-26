@@ -1,2 +1,163 @@
-﻿<h1>Admin Area - Home</h1>
+﻿@model (List<Domain.Entities.Product> Products, List<Domain.Entities.Category> Categories)
 
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- Stats -->
+<div class="row g-3 mb-3">
+    <div class="col-md-3">
+        <div class="admin-card">
+            <div class="text-muted">TOTAL PRODUCTS</div>
+            <div style="font-size:34px;font-weight:700;">@ViewBag.TotalProducts</div>
+            <small class="text-muted">All products in database</small>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="admin-card">
+            <div class="text-muted">ACTIVE CATEGORIES</div>
+            <div style="font-size:34px;font-weight:700;">@ViewBag.TotalCategories</div>
+            <small class="text-muted">Categories available</small>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="admin-card">
+            <div class="text-muted">PENDING ORDERS</div>
+            <div style="font-size:34px;font-weight:700;">0</div>
+            <small class="text-muted">Coming soon</small>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="admin-card">
+            <div class="text-muted">MONTHLY REVENUE</div>
+            <div style="font-size:34px;font-weight:700;">0</div>
+            <small class="text-muted">Coming soon</small>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <!-- Products -->
+    <div class="col-lg-7">
+        <div class="admin-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0">Product Management</h5>
+
+                <a asp-area="Admin"
+                   asp-controller="Product"
+                   asp-action="Create"
+                   class="admin-btn-gold">
+                    + Add New Product
+                </a>
+            </div>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th style="width:70px;">Image</th>
+
+                        <th style="width:120px;">Price</th>
+                        <th style="width:140px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Products == null || Model.Products.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-muted">No products yet.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var p in Model.Products)
+                        {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>
+                        <img src="@(string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/products/p1.jpg" : p.ImageUrl)"
+                             style="width:48px;height:48px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,.08);" />
+                    </td>
+                
+                    <td>@p.Price.ToString("0.00")</td>
+                    <td>
+                        <a asp-area="Admin" asp-controller="Product" asp-action="Edit" asp-route-id="@p.Id"
+                           class="btn btn-sm btn-outline-light">Edit</a>
+
+                        <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@p.Id"
+                           class="btn btn-sm btn-outline-danger ms-1">Delete</a>
+                    </td>
+                </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="col-lg-5">
+        <div class="admin-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0">Category Management</h5>
+
+                <a asp-area="Admin"
+                   asp-controller="Category"
+                   asp-action="Create"
+                   class="admin-btn-gold">
+                    + Add New Category
+                </a>
+            </div>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th style="width:140px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Categories == null || Model.Categories.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="2" class="text-muted">No categories yet.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var c in Model.Categories)
+                        {
+                            <tr>
+                                <td>@c.Name</td>
+                                <td>
+                                    <a asp-area="Admin" asp-controller="Category" asp-action="Edit" asp-route-id="@c.Id"
+                                       class="btn btn-sm btn-outline-light">Edit</a>
+
+                                    <form asp-area="Admin"
+                                          asp-controller="Category"
+                                          asp-action="DeleteConfirmed"
+                                          method="post"
+                                          style="display:inline;" class="js-delete-form">
+                                        
+
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@c.Id" />
+
+                                        <button type="submit" class="btn btn-sm btn-outline-danger ms-1">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

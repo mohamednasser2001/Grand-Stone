@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Domain.Entities.Product>
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Products";
+}
+
+<div class="admin-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="m-0">Products</h5>
+
+        <a asp-area="Admin" asp-controller="Product" asp-action="Create" class="admin-btn-gold">
+            + Add New Product
+        </a>
+    </div>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th style="width:80px;">Image</th>
+                <th style="width:140px;">Category</th>
+                <th style="width:140px;">Price</th>
+                <th style="width:120px;">Available</th>
+                <th style="width:200px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="5" class="text-muted">No products yet.</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var p in Model)
+                {
+        <tr>
+            <td>@p.Name</td>
+            <td>
+                <img src="@(string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/products/p1.jpg" : p.ImageUrl)"
+                     style="width:52px;height:52px;object-fit:cover;border-radius:12px;border:1px solid rgba(255,255,255,.08);" />
+            </td>
+            <td>@(p.Category?.Name ?? "-")</td>
+            <td>@p.Price.ToString("0.00")</td>
+            <td>@(p.IsAvailable ? "Yes" : "No")</td>
+            <td>
+                <a asp-area="Admin" asp-controller="Product" asp-action="Edit" asp-route-id="@p.Id"
+                   class="btn btn-sm btn-outline-light">Edit</a>
+
+                <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@p.Id"
+                   class="btn btn-sm btn-outline-danger ms-1">Delete</a>
+            </td>
+        </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

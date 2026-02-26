@@ -1,13 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataAccess.UnitOfWork;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Grand_Stone.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
-        [Area("Customer")]
-        public IActionResult Index()
+      
+        private readonly IUnitOfWork _unitOfWork;
+
+        public HomeController(IUnitOfWork unitOfWork)
         {
-            return View();
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var products = await _unitOfWork.Products.GetAllAsync(p => p.IsAvailable == true);
+            return View(products);
         }
     }
 }
