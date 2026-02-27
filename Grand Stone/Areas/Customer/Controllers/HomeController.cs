@@ -14,10 +14,6 @@ namespace Grand_Stone.Areas.Customer.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            var products = await _unitOfWork.Products.GetAllAsync(p => p.IsAvailable == true);
-            return View(products);
-        }
+      
     }
 }

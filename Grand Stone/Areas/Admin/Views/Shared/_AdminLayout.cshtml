@@ -4,6 +4,21 @@
 
     var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    // Search value (if controller sets it)
+    var q = ViewBag.Q as string ?? "";
+
+    // Decide where search should go based on current page
+    var searchController = currentController ?? "Home";
+    var searchAction = "Index";
+
+    // لو انت في صفحات Create/Edit خلي البحث يرجع للـ Index بتاع نفس الـ Controller
+    // (يعني وانت بتعمل Add Product، البحث يودّيك Product/Index)
+    if (currentAction != null && currentAction != "Index")
+    {
+        searchAction = "Index";
+    }
 }
 
 <!DOCTYPE html>
@@ -62,9 +77,20 @@
                 </div>
 
                 <div class="topbar-right">
-                    <div class="search-box">
-                        <input type="text" placeholder="Search..." />
-                    </div>
+                    <!-- Search -->
+                    <form class="search-box"
+                          method="get"
+                          asp-area="Admin"
+                          asp-controller="@searchController"
+                          asp-action="@searchAction">
+
+                        <input type="text"
+                               name="q"
+                               value="@q"
+                               placeholder="Search..."
+                               autocomplete="off" />
+                    </form>
+
                     <div class="admin-user">
                         <div class="user-avatar">A</div>
                         <div class="user-name">Admin</div>
@@ -82,33 +108,36 @@
     </div>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
     @RenderSection("Scripts", required: false)
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @if (TempData["ToastMessage"] != null)
     {
         <script>
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            iconColor: '#c7a35a',
-            background: '#171a21',
-            color: 'rgba(255,255,255,.92)',
-            showConfirmButton: false,
-            timer: 2200,
-            timerProgressBar: true,
-            padding: '12px 14px',
-            customClass: {
-                popup: 'gs-toast'
-            }
-        });
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                iconColor: '#c7a35a',
+                background: '#171a21',
+                color: 'rgba(255,255,255,.92)',
+                showConfirmButton: false,
+                timer: 2200,
+                timerProgressBar: true,
+                padding: '12px 14px',
+                customClass: { popup: 'gs-toast' }
+            });
 
-        Toast.fire({
-            icon: '@(TempData["ToastType"] ?? "success")',
-            title: '@TempData["ToastMessage"]'
-        });
+            Toast.fire({
+                icon: '@(TempData["ToastType"] ?? "success")',
+                title: '@TempData["ToastMessage"]'
+            });
         </script>
     }
+
     <script>
+        // SweetAlert2 confirm delete for any form has class "js-delete-form"
         document.addEventListener("submit", function (e) {
             const form = e.target;
             if (!form.classList.contains("js-delete-form")) return;

@@ -15,10 +15,23 @@ namespace Grand_Stone.Areas.Admin.Controllers
             _unitOfWork = unitOfWork;
         }
 
-     
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(string q)
         {
-            var categories = await _unitOfWork.Categories.GetAllAsync();
+            var categories = (await _unitOfWork.Categories.GetAllAsync())
+                .OrderByDescending(c => c.Id)
+                .ToList();
+
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                q = q.Trim().ToLower();
+                categories = categories
+                    .Where(c => c.Name != null && c.Name.ToLower().Contains(q))
+                    .OrderByDescending(c => c.Id)
+                    .ToList();
+            }
+
+            ViewBag.Q = q;
             return View(categories);
         }
 

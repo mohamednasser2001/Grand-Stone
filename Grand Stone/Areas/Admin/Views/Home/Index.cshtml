@@ -88,8 +88,17 @@
                         <a asp-area="Admin" asp-controller="Product" asp-action="Edit" asp-route-id="@p.Id"
                            class="btn btn-sm btn-outline-light">Edit</a>
 
-                        <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@p.Id"
-                           class="btn btn-sm btn-outline-danger ms-1">Delete</a>
+                        <form asp-area="Admin"
+                              asp-controller="Product"
+                              asp-action="DeleteConfirmed"
+                              method="post"
+                              class="js-delete-form"
+                              data-name="@p.Name"
+                              style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@p.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger ms-1">Delete</button>
+                        </form>
                     </td>
                 </tr>
                         }
